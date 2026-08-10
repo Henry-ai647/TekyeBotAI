@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from menu import get_menu, find_meal
-from chat import process_customer_message
+from chat import from order_manager import create_order_summary, confirm_order
 
 router = APIRouter()
 
@@ -107,3 +107,55 @@ def create_order(
         "message": "Order received successfully.",
         "order": order
     }
+@router.post("/orders/preview")
+def preview_order(
+    customer: str,
+    meal: str,
+    quantity: int
+):
+
+    selected_meal = find_meal(meal)
+
+    if selected_meal is None:
+        return {
+            "success": False,
+            "message": "Sorry, that meal is not available."
+        }
+
+    order = create_order_summary(
+        customer=customer,
+        meal=selected_meal["name"],
+        quantity=quantity,
+        price=selected_meal["price"]
+    )
+
+    return {
+        "success": True,
+        "message": "Please confirm your order.",
+        "order": order
+    }
+
+
+@router.post("/orders/confirm")
+def confirm_customer_order(
+    customer: str,
+    meal: str,
+    quantity: int
+):
+
+    selected_meal = find_meal(meal)
+
+    if selected_meal is None:
+        return {
+            "success": False,
+            "message": "Sorry, that meal is not available."
+        }
+
+    order = create_order_summary(
+        customer=customer,
+        meal=selected_meal["name"],
+        quantity=quantity,
+        price=selected_meal["price"]
+    )
+
+    return confirm_order(order)
