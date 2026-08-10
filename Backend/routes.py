@@ -1,12 +1,16 @@
 from fastapi import APIRouter
+from menu import get_menu, find_meal
 
 router = APIRouter()
 
 restaurants = []
+orders = []
+
 
 @router.get("/restaurants")
 def get_restaurants():
     return restaurants
+
 
 @router.post("/restaurants")
 def add_restaurant(name: str, phone: str, location: str):
@@ -25,26 +29,66 @@ def add_restaurant(name: str, phone: str, location: str):
         "restaurant": restaurant
     }
 
-orders = []
+
+@router.get("/menu")
+def get_restaurant_menu():
+    return {
+        "restaurant": "Demo Restaurant",
+        "menu": get_menu()
+    }
+
+
+@router.get("/menu/{meal_name}")
+def get_meal(meal_name: str):
+
+    meal = find_meal(meal_name)
+
+    if meal is None:
+        return {
+            "found": False,
+            "message": "Meal not found."
+        }
+
+    return {
+        "found": True,
+        "meal": meal
+    }
+
 
 @router.get("/orders")
 def get_orders():
     return orders
 
+
 @router.post("/orders")
-def create_order(customer: str, meal: str, quantity: int):
+def create_order(
+    customer: str,
+    meal: str,
+    quantity: int
+):
+
+    selected_meal = find_meal(meal)
+
+    if selected_meal is None:
+        return {
+            "success": False,
+            "message": "Sorry, that meal is not available."
+        }
 
     order = {
         "id": len(orders) + 1,
         "customer": customer,
-        "meal": meal,
+        "meal": selected_meal["name"],
         "quantity": quantity,
+        "unit_price": selected_meal["price"],
+        "total": selected_meal["price"] * quantity,
         "status": "Pending"
     }
 
     orders.append(order)
 
     return {
-        "message": "Order received",
+        "success": True,
+        "message": "Order received successfully.",
         "order": order
     }
