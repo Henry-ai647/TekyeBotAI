@@ -7,8 +7,12 @@ restaurants = []
 from notifications import (
     create_notification,
     get_notifications,
-    mark_notification_read
+    from accessibility import (
+    create_profile,
+    get_profile,
+    update_profile
 )
+
 
 @router.get("/restaurants")
 def get_restaurants():
@@ -251,5 +255,43 @@ def notifications():
 def read_notification(notification_id: int):
 
     return mark_notification_read(
-        notification_id
+        @router.post("/accessibility/profile")
+def create_accessibility_profile(
+    user_id: str,
+    vision_assistance: bool = False,
+    sign_language: bool = False,
+    voice_assistance: bool = False,
+    text_assistance: bool = True,
+    language: str = "English"
+):
+
+    profile = create_profile(
+        user_id=user_id,
+        vision_assistance=vision_assistance,
+        sign_language=sign_language,
+        voice_assistance=voice_assistance,
+        text_assistance=text_assistance,
+        language=language
     )
+
+    return {
+        "success": True,
+        "profile": profile
+    }
+
+
+@router.get("/accessibility/profile/{user_id}")
+def get_accessibility_profile(user_id: str):
+
+    profile = get_profile(user_id)
+
+    if profile is None:
+        return {
+            "success": False,
+            "message": "Accessibility profile not found."
+        }
+
+    return {
+        "success": True,
+        "profile": profile
+    }
