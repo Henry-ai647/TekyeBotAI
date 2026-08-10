@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from menu import get_menu, find_meal
 from chat import from order_manager import create_order_summary, from customer import add_customer, get_customers, find_customer
 router = from whatsapp import receive_whatsapp_message
+from order_parser import prepare_order
+
 restaurants = []
 orders = []
 
@@ -202,5 +204,13 @@ def whatsapp_message(
 
     return {
         "success": True,
-        "whatsapp": result
-    }
+        "whatsapp": @router.post("/orders/understand")
+def understand_order(
+    customer: str,
+    message: str
+):
+
+    return prepare_order(
+        customer=customer,
+        message=message
+    )
