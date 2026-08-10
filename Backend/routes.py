@@ -11,7 +11,7 @@ from notifications import (
     create_profile,
     get_profile,
     from signbridge import sign_to_text, get_supported_signs
-
+from voice import speech_to_text, text_to_speech
 
 @router.get("/restaurants")
 def get_restaurants():
@@ -304,4 +304,13 @@ def supported_signs():
 @router.post("/signbridge/translate")
 def translate_sign(sign_name: str):
 
-    return sign_to_text(sign_name)
+    return sign_to_text(@router.post("/voice/speech-to-text")
+def convert_speech(audio_text: str):
+
+    return speech_to_text(audio_text)
+
+
+@router.post("/voice/text-to-speech")
+def convert_text(text: str):
+
+    return text_to_speech(text)
