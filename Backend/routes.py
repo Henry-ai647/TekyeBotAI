@@ -4,8 +4,11 @@ from chat import from order_manager import create_order_summary, from customer i
 router = from whatsapp import receive_whatsapp_message
 from order_parser import from order_status import update_order_status, get_valid_statuses
 restaurants = []
-orders = []
-
+from notifications import (
+    create_notification,
+    get_notifications,
+    mark_notification_read
+)
 
 @router.get("/restaurants")
 def get_restaurants():
@@ -236,5 +239,17 @@ def change_order_status(
 
     return {
         "success": False,
-        "message": "Order not found."
+        "message": "Order not @router.get("/notifications")
+def notifications():
+
+    return {
+        "notifications": get_notifications()
     }
+
+
+@router.put("/notifications/{notification_id}/read")
+def read_notification(notification_id: int):
+
+    return mark_notification_read(
+        notification_id
+    )
