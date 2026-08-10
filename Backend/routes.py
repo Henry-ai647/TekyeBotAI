@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from menu import get_menu, find_meal
+from chat import process_customer_message
 
 router = APIRouter()
 
@@ -13,7 +14,11 @@ def get_restaurants():
 
 
 @router.post("/restaurants")
-def add_restaurant(name: str, phone: str, location: str):
+def add_restaurant(
+    name: str,
+    phone: str,
+    location: str
+):
 
     restaurant = {
         "id": len(restaurants) + 1,
@@ -32,6 +37,7 @@ def add_restaurant(name: str, phone: str, location: str):
 
 @router.get("/menu")
 def get_restaurant_menu():
+
     return {
         "restaurant": "Demo Restaurant",
         "menu": get_menu()
@@ -44,6 +50,7 @@ def get_meal(meal_name: str):
     meal = find_meal(meal_name)
 
     if meal is None:
+
         return {
             "found": False,
             "message": "Meal not found."
@@ -55,8 +62,15 @@ def get_meal(meal_name: str):
     }
 
 
+@router.post("/chat")
+def chat(message: str):
+
+    return process_customer_message(message)
+
+
 @router.get("/orders")
 def get_orders():
+
     return orders
 
 
@@ -70,6 +84,7 @@ def create_order(
     selected_meal = find_meal(meal)
 
     if selected_meal is None:
+
         return {
             "success": False,
             "message": "Sorry, that meal is not available."
