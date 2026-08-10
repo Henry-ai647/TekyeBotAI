@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from menu import get_menu, find_meal
-from chat import from order_manager import create_order_summary, confirm_order
-
+from chat import from order_manager import create_order_summary, from customer import add_customer, get_customers, find_customer
 router = APIRouter()
 
 restaurants = []
@@ -159,3 +158,37 @@ def confirm_customer_order(
     )
 
     return confirm_order(order)
+    
+@router.post("/customers")
+def create_customer(
+    name: str,
+    phone: str
+):
+
+    existing_customer = find_customer(phone)
+
+    if existing_customer:
+        return {
+            "success": True,
+            "message": "Customer already exists.",
+            "customer": existing_customer
+        }
+
+    customer = add_customer(
+        name=name,
+        phone=phone
+    )
+
+    return {
+        "success": True,
+        "message": "Customer registered successfully.",
+        "customer": customer
+    }
+
+
+@router.get("/customers")
+def customers():
+
+    return {
+        "customers": get_customers()
+    }
