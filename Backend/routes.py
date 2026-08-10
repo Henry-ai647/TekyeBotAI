@@ -2,8 +2,7 @@ from fastapi import APIRouter
 from menu import get_menu, find_meal
 from chat import from order_manager import create_order_summary, from customer import add_customer, get_customers, find_customer
 router = from whatsapp import receive_whatsapp_message
-from order_parser import prepare_order
-
+from order_parser import from order_status import update_order_status, get_valid_statuses
 restaurants = []
 orders = []
 
@@ -212,5 +211,30 @@ def understand_order(
 
     return prepare_order(
         customer=customer,
-        message=message
-    )
+        message=@router.get("/orders/statuses")
+def order_statuses():
+
+    return {
+        "statuses": get_valid_statuses()
+    }
+
+
+@router.put("/orders/{order_id}/status")
+def change_order_status(
+    order_id: int,
+    status: str
+):
+
+    for order in orders:
+
+        if order["id"] == order_id:
+
+            return update_order_status(
+                order,
+                status
+            )
+
+    return {
+        "success": False,
+        "message": "Order not found."
+    }
