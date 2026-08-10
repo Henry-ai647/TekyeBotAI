@@ -1,0 +1,51 @@
+# Didi AI Restaurant Menu
+
+MENU = [
+    {
+        "id": 1,
+        "name": "Jollof Rice",
+        "price": 35,
+        "description": "Ghanaian jollof rice served with chicken.",
+        "available": True
+    },
+    {
+        "id": 2,
+        "name": "Fried Rice",
+        "price": 40,
+        "description": "Fried rice served with grilled chicken.",
+        "available": True
+    },
+    {
+        "id": 3,
+        "name": "Banku and Tilapia",
+        "price": 60,
+        "description": "Banku served with grilled tilapia and pepper.",
+        "available": True
+    },
+    {
+        "id": 4,
+        "name": "Waakye",
+        "price": 30,
+        "description": "Waakye served with stew and your choice of protein.",
+        "available": True
+    }
+]
+
+
+def get_menu():
+    """Return all available meals."""
+    return [
+        item for item in MENU
+        if item["available"]
+    ]
+
+
+def find_meal(meal_name):
+    """Find a meal by name."""
+    meal_name = meal_name.lower()
+
+    for item in MENU:
+        if item["name"].lower() == meal_name:
+            return item
+
+    return None
