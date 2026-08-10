@@ -10,8 +10,7 @@ from notifications import (
     from accessibility import (
     create_profile,
     get_profile,
-    update_profile
-)
+    from signbridge import sign_to_text, get_supported_signs
 
 
 @router.get("/restaurants")
@@ -293,5 +292,16 @@ def get_accessibility_profile(user_id: str):
 
     return {
         "success": True,
-        "profile": profile
+        "profile": @router.get("/signbridge/signs")
+def supported_signs():
+
+    return {
+        "success": True,
+        "signs": get_supported_signs()
     }
+
+
+@router.post("/signbridge/translate")
+def translate_sign(sign_name: str):
+
+    return sign_to_text(sign_name)
